@@ -1,0 +1,1 @@
+# AURA-SPEC-007: Plugin API
