@@ -2,10 +2,15 @@
 Event Bus — AURA-007, AURA-SPEC-003
 
 In-process, asyncio-based event distribution.
+
+v0.1 dispatch model:
+- Synchronous sequential dispatch (await each subscriber in registration order)
+- No queues, no background tasks, no priority ordering
+- Subscriber exception isolation
+- Lifecycle: start() / stop() flags
 """
 from __future__ import annotations
 
-import asyncio
 import logging
 from collections import defaultdict
 from collections.abc import Callable
@@ -22,55 +27,40 @@ class EventBus:
     Supports:
     - Asynchronous subscribers
     - Event filtering by type
-    - Basic priority ordering
     - Exception isolation
-    - Graceful shutdown
+    - Deterministic sequential dispatch
 
-    Ordering guarantees:
-    - For events sharing the same execution context 
-      (same correlation_id), ordering is preserved 
-      for events of the same type
-    - Global ordering across unrelated concurrent 
-      actions is NOT required
+    v0.1 ordering guarantees:
+    - Subscribers for a given event type execute sequentially
+      in registration order (await each callback before the next)
+    - Multiple events published sequentially arrive in publish order
+    - Global ordering across unrelated concurrent publish calls
+      is NOT guaranteed
     """
 
-    def __init__(self, queue_size: int = 1000):
-        """
-        Initialize the Event Bus.
-
-        Args:
-            queue_size: Maximum queue size per event type
-        """
-        self._queue_size = queue_size
-        self._queues: dict[str, asyncio.PriorityQueue] = {}
+    def __init__(self) -> None:
+        """Initialize the Event Bus."""
         self._subscribers: dict[EventType, list[Callable]] = defaultdict(list)
         self._running = False
-        self._tasks: list[asyncio.Task] = []
 
     async def start(self) -> None:
         """
         Start the event bus.
 
-        This method initializes any background processing
-        and marks the bus as running.
+        Marks the bus as running. Publish calls are only
+        allowed while the bus is running.
         """
         self._running = True
         logger.info("Event bus started")
 
     async def stop(self) -> None:
         """
-        Gracefully shut down the event bus.
+        Stop the event bus.
 
-        This method:
-        - Cancels any pending subscriber tasks
-        - Waits for graceful shutdown
-        - Logs the shutdown event
+        Marks the bus as stopped. Publish calls after stop
+        will raise RuntimeError.
         """
         self._running = False
-        for task in self._tasks:
-            task.cancel()
-        if self._tasks:
-            await asyncio.gather(*self._tasks, return_exceptions=True)
         logger.info("Event bus stopped")
 
     def subscribe(self, event_type: EventType, callback: Callable) -> None:
@@ -104,15 +94,21 @@ class EventBus:
         """
         Publish an event to all subscribers.
 
+        Dispatches sequentially: each subscriber is awaited in
+        registration order before the next is called.
+
         Subscriber failures are isolated — one failing subscriber
         does not prevent others from receiving the event.
 
-        Ordering is preserved for events sharing the same
-        correlation_id when subscribers process sequentially.
+        Raises:
+            RuntimeError: If the bus is not running.
 
         Args:
             event: The event to publish
         """
+        if not self._running:
+            raise RuntimeError("EventBus is not running")
+
         callbacks = self._subscribers.get(event.event_type, [])
 
         for callback in callbacks:
@@ -126,7 +122,7 @@ class EventBus:
 
     async def publish_many(self, events: list[Event]) -> None:
         """
-        Publish multiple events.
+        Publish multiple events sequentially.
 
         Args:
             events: List of events to publish

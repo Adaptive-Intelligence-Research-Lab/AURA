@@ -117,3 +117,19 @@ class TestEventBus:
         await event_bus.publish(event)
 
         assert received[0].correlation_id == correlation_id
+
+
+class TestEventBusLifecycle:
+    """Tests for EventBus lifecycle contracts."""
+
+    @pytest.mark.asyncio
+    async def test_publish_after_stop(self):
+        """Publishing after stop must raise RuntimeError."""
+        bus = EventBus()
+        await bus.start()
+        await bus.stop()
+
+        with pytest.raises(RuntimeError, match="EventBus is not running"):
+            await bus.publish(
+                Event(event_type=EventType.ACTION_CREATED, source="test", payload={})
+            )
