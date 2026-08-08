@@ -1,11 +1,11 @@
 """Tests for State Manager."""
-import pytest
-import asyncio
 from uuid import uuid4
 
-from aura.runtime.state.manager import StateManager
+import pytest
+
 from aura.models.events import Event, EventType
 from aura.models.state import ActionState, KernelState, StateTransitionError
+from aura.runtime.state.manager import StateManager
 
 
 class TestStateManager:

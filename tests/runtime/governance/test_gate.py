@@ -1,8 +1,8 @@
 """Tests for the Governance Gate."""
 import pytest
 
-from aura.runtime.governance.gate import GovernanceGate, GovernanceDecision
 from aura.models.actions import Action
+from aura.runtime.governance.gate import GovernanceDecision, GovernanceGate
 
 
 class TestGovernanceGate:

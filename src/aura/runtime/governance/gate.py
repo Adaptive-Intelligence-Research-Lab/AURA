@@ -10,9 +10,8 @@ in later versions.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Optional
 import logging
+from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +20,7 @@ logger = logging.getLogger(__name__)
 class GovernanceDecision:
     """Result of a governance check."""
     allowed: bool
-    reason: Optional[str] = None
+    reason: str | None = None
 
 
 class GovernanceGate:

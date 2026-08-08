@@ -1,18 +1,17 @@
 """Tests for the CapabilityExecutor."""
-import pytest
-import asyncio
-from uuid import uuid4
 
-from aura.runtime.executor.executor import CapabilityExecutor, ExecutionResult
-from aura.runtime.event_bus.bus import EventBus
-from aura.runtime.governance.gate import GovernanceGate
-from aura.models.actions import Action, ActionPolicy
+import pytest
+
+from aura.models.actions import Action
 from aura.models.capabilities import (
-    CapabilityProvider,
     CapabilityMetadata,
+    CapabilityProvider,
     RiskLevel,
 )
 from aura.models.events import Event, EventType
+from aura.runtime.event_bus.bus import EventBus
+from aura.runtime.executor.executor import CapabilityExecutor
+from aura.runtime.governance.gate import GovernanceGate
 
 
 class MockCapabilityProvider(CapabilityProvider):

@@ -20,7 +20,6 @@ Example:
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from ...models.actions import Action
 from ...models.capabilities import CapabilityProvider
@@ -47,11 +46,11 @@ class RuntimeKernel:
 
     def __init__(self):
         """Initialize the runtime kernel with all subsystems."""
-        self._event_bus = EventBus()
-        self._state_manager = StateManager()
-        self._governance = GovernanceGate()
-        self._registry = CapabilityRegistry()
-        self._executor = CapabilityExecutor(
+        self._event_bus: EventBus = EventBus()
+        self._state_manager: StateManager = StateManager()
+        self._governance: GovernanceGate = GovernanceGate()
+        self._registry: CapabilityRegistry = CapabilityRegistry()
+        self._executor: CapabilityExecutor = CapabilityExecutor(
             event_bus=self._event_bus,
             governance=self._governance,
         )
@@ -224,7 +223,7 @@ class RuntimeKernel:
         self._initialized = False
         logger.info("AURA Runtime Kernel stopped")
 
-    def get_state(self, action_id: str) -> Optional[object]:
+    def get_state(self, action_id: str) -> object | None:
         """
         Get the current state of an action.
 

@@ -1,10 +1,10 @@
 """Tests for the Event Bus."""
-import pytest
-import asyncio
 from uuid import uuid4
 
-from aura.runtime.event_bus.bus import EventBus
+import pytest
+
 from aura.models.events import Event, EventType
+from aura.runtime.event_bus.bus import EventBus
 
 
 @pytest.fixture

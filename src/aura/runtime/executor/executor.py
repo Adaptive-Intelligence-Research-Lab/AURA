@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 
 from ...models.actions import Action
 from ...models.capabilities import CapabilityProvider
@@ -37,8 +37,8 @@ class ExecutionResult:
     capability_id: str
     success: bool
     output: dict[str, Any]
-    error: Optional[str] = None
-    duration_ms: Optional[float] = None
+    error: str | None = None
+    duration_ms: float | None = None
 
 
 class CapabilityExecutor:
@@ -116,7 +116,7 @@ class CapabilityExecutor:
             # 4. Validate input parameters
             try:
                 validated_params = provider.validate(action.parameters)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 duration = (time.time() - start_time) * 1000
                 result = ExecutionResult(
                     action_id=action_id,
@@ -137,7 +137,7 @@ class CapabilityExecutor:
             # 5. Execute the capability
             try:
                 output = await provider.execute(validated_params)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 duration = (time.time() - start_time) * 1000
                 logger.error(
                     f"Execution error for {cap_id} "
@@ -176,7 +176,7 @@ class CapabilityExecutor:
             )
             return result
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             duration = (time.time() - start_time) * 1000
             logger.error(
                 f"Unexpected error executing {cap_id} "
@@ -203,7 +203,7 @@ class CapabilityExecutor:
         event_type: EventType,
         action_id: str,
         capability_id: str,
-        extra_payload: Optional[dict] = None,
+        extra_payload: dict | None = None,
     ) -> None:
         """Publish an event to the event bus."""
         payload = {

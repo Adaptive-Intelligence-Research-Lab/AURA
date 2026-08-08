@@ -1,15 +1,15 @@
 """Tests for the Runtime Kernel."""
-import pytest
-from uuid import uuid4
 
-from aura.runtime.kernel.kernel import RuntimeKernel
+import pytest
+
 from aura.models.actions import Action
 from aura.models.capabilities import (
-    CapabilityProvider,
     CapabilityMetadata,
+    CapabilityProvider,
     RiskLevel,
 )
 from aura.models.state import ActionState
+from aura.runtime.kernel.kernel import RuntimeKernel
 
 
 class EchoProvider(CapabilityProvider):
@@ -118,7 +118,7 @@ class TestRuntimeKernel:
             capability_id="core.echo",
             parameters={"message": "test"}
         )
-        result = await kernel.execute(action)
+        await kernel.execute(action)
 
         action_id = str(action.id)
         state = kernel.get_state(action_id)

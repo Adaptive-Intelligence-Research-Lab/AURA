@@ -17,7 +17,6 @@ Example:
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from ...models.events import Event, EventType
 from ...models.state import ActionState, KernelState, StateTransitionError
@@ -53,7 +52,7 @@ class StateManager:
         self._action_states: dict[str, ActionState] = {}
         self._kernel_state: KernelState = KernelState.CREATED
 
-    async def handle_event(self, event: Event) -> Optional[ActionState]:
+    async def handle_event(self, event: Event) -> ActionState | None:
         """
         Process an event and update state accordingly.
         
@@ -105,7 +104,7 @@ class StateManager:
         logger.debug(f"Unhandled event type: {event.event_type}")
         return None
 
-    def _handle_action_created(self, action_id: Optional[str]) -> ActionState:
+    def _handle_action_created(self, action_id: str | None) -> ActionState:
         """Handle ActionCreated event."""
         if not action_id:
             return ActionState.CREATED
@@ -116,7 +115,7 @@ class StateManager:
         return ActionState.CREATED
 
     def _transition_action(
-        self, action_id: Optional[str], target: ActionState
+        self, action_id: str | None, target: ActionState
     ) -> ActionState:
         """
         Attempt a state transition for an action.
@@ -177,7 +176,7 @@ class StateManager:
         )
         return target
 
-    def get_state(self, action_id: str) -> Optional[ActionState]:
+    def get_state(self, action_id: str) -> ActionState | None:
         """
         Get current state of an action.
 

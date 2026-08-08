@@ -21,7 +21,6 @@ explicit replacement is supported.
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from ...models.capabilities import CapabilityMetadata, CapabilityProvider
 
@@ -92,7 +91,7 @@ class CapabilityRegistry:
         logger.info(f"Unregistered capability: {capability_id}")
         return True
 
-    def get(self, capability_id: str) -> Optional[CapabilityProvider]:
+    def get(self, capability_id: str) -> CapabilityProvider | None:
         """
         Get a capability provider by ID.
 
@@ -143,7 +142,7 @@ class CapabilityRegistry:
         """
         return capability_id in self._providers
 
-    def get_metadata(self, capability_id: str) -> Optional[CapabilityMetadata]:
+    def get_metadata(self, capability_id: str) -> CapabilityMetadata | None:
         """
         Get metadata for a registered capability.
 

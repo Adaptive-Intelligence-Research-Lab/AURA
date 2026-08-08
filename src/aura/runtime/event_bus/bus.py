@@ -8,7 +8,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from collections import defaultdict
-from typing import Any, Callable, Optional
+from collections.abc import Callable
 
 from ...models.events import Event, EventType
 
@@ -118,10 +118,9 @@ class EventBus:
         for callback in callbacks:
             try:
                 await callback(event)
-            except Exception as e:
-                logger.error(
-                    f"Subscriber error for {event.event_type}: {e}",
-                    exc_info=True
+            except Exception:
+                logger.exception(
+                    f"Subscriber error for {event.event_type}",
                 )
                 # Isolate — continue processing other subscribers
 
