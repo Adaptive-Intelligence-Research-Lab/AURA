@@ -50,4 +50,3 @@ class StateTransitionError(Exception):
     Example:
         Trying to transition from RUNNING -> QUEUED
     """
-    pass

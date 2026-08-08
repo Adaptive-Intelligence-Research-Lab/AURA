@@ -6,10 +6,10 @@ Structured result returned by every capability execution.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Any, Optional
-from uuid import UUID, uuid4
 from datetime import datetime, timezone
+from enum import Enum
+from typing import Any
+from uuid import UUID, uuid4
 
 
 class ExecutionStatus(str, Enum):
@@ -31,12 +31,12 @@ class ExecutionResult:
     action_id: UUID
     status: ExecutionStatus
     execution_id: UUID = field(default_factory=uuid4)
-    output: Optional[dict[str, Any]] = None
-    error: Optional[str] = None
+    output: dict[str, Any] | None = None
+    error: str | None = None
     started_at: datetime = field(
         default_factory=lambda: datetime.now(timezone.utc)
     )
-    completed_at: Optional[datetime] = None
+    completed_at: datetime | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
     @property

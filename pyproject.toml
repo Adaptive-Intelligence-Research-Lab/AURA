@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "aura"
 version = "0.1.0"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 description = "Adaptive Unified Reasoning Agent - Runtime Core v0.1"
 authors = [{name = "AIR Lab"}]
 
@@ -31,7 +31,8 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 120
-target-version = "py311"
+target-version = "py310"
+ignore = ["UP017"]  # datetime.UTC requires Python 3.11+
 
 [tool.mypy]
 python_version = "3.11"

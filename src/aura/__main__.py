@@ -7,6 +7,7 @@ Full CLI will be implemented in later phases.
 import asyncio
 import sys
 
+
 async def main():
     """Placeholder for main entry point."""
     print("AURA Runtime Core v0.1 - Implementation Phase")

@@ -7,10 +7,10 @@ Every significant runtime state transition produces an event.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 from uuid import UUID, uuid4
-from datetime import datetime, timezone
 
 
 class EventType(str, Enum):

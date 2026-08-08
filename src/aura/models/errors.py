@@ -6,10 +6,10 @@ Structured error representation for consistent failure handling.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Any, Optional
-from uuid import UUID, uuid4
 from datetime import datetime, timezone
+from enum import Enum
+from typing import Any
+from uuid import UUID, uuid4
 
 
 class ErrorCategory(str, Enum):
@@ -49,8 +49,8 @@ class RuntimeError:
     severity: ErrorSeverity
     message: str
     error_id: UUID = field(default_factory=uuid4)
-    action_id: Optional[UUID] = None
-    capability_id: Optional[str] = None
+    action_id: UUID | None = None
+    capability_id: str | None = None
     timestamp: datetime = field(
         default_factory=lambda: datetime.now(timezone.utc)
     )

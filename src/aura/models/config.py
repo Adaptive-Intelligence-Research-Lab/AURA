@@ -6,7 +6,7 @@ Structured configuration with layered precedence.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional
+
 import yaml
 
 
@@ -40,7 +40,7 @@ class AuraConfig:
     governance: GovernanceConfig = field(default_factory=GovernanceConfig)
 
     @classmethod
-    def from_dict(cls, data: dict) -> "AuraConfig":
+    def from_dict(cls, data: dict) -> AuraConfig:
         """Create config from dictionary."""
         return cls(
             runtime=RuntimeConfig(**data.get("runtime", {})),
@@ -50,7 +50,7 @@ class AuraConfig:
         )
 
     @classmethod
-    def from_file(cls, path: str) -> "AuraConfig":
+    def from_file(cls, path: str) -> AuraConfig:
         """Load configuration from YAML file."""
         with open(path, "r") as f:
             data = yaml.safe_load(f)
