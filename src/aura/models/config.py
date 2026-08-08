@@ -53,7 +53,8 @@ class AuraConfig:
             runtime=RuntimeConfig(**data.get("runtime", {})),
             event_bus=EventBusConfig(**data.get("event_bus", {})),
             observability=ObservabilityConfig(**data.get("observability", {})),
-            governance=GovernanceConfig(**data.get("governance", {}))
+            governance=GovernanceConfig(**data.get("governance", {})),
+            execution=ExecutionConfig(**data.get("execution", {})),
         )
 
     @classmethod
