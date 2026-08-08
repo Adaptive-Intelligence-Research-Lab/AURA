@@ -7,7 +7,7 @@ Every significant runtime state transition produces an event.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 from uuid import UUID, uuid4
@@ -54,7 +54,7 @@ class Event:
     source: str
     event_id: UUID = field(default_factory=uuid4)
     timestamp: datetime = field(
-        default_factory=lambda: datetime.now(timezone.utc)
+        default_factory=lambda: datetime.now(UTC)
     )
     correlation_id: UUID = field(default_factory=uuid4)
     payload: dict[str, Any] = field(default_factory=dict)

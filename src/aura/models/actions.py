@@ -8,7 +8,7 @@ the Adaptive Intelligence Runtime.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -44,5 +44,5 @@ class Action:
     # Auto-generated fields
     id: UUID = field(default_factory=uuid4)
     created_at: datetime = field(
-        default_factory=lambda: datetime.now(timezone.utc)
+        default_factory=lambda: datetime.now(UTC)
     )

@@ -6,7 +6,7 @@ Structured error representation for consistent failure handling.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 from uuid import UUID, uuid4
@@ -52,7 +52,7 @@ class RuntimeError:
     action_id: UUID | None = None
     capability_id: str | None = None
     timestamp: datetime = field(
-        default_factory=lambda: datetime.now(timezone.utc)
+        default_factory=lambda: datetime.now(UTC)
     )
     recoverable: bool = True
     metadata: dict[str, Any] = field(default_factory=dict)

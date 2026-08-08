@@ -6,7 +6,7 @@ Structured result returned by every capability execution.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 from uuid import UUID, uuid4
@@ -34,7 +34,7 @@ class ExecutionResult:
     output: dict[str, Any] | None = None
     error: str | None = None
     started_at: datetime = field(
-        default_factory=lambda: datetime.now(timezone.utc)
+        default_factory=lambda: datetime.now(UTC)
     )
     completed_at: datetime | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
