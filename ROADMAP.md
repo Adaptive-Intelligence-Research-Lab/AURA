@@ -7,18 +7,32 @@
 - [x] Architecture specifications (AURA-000 through AURA-017)
 - [x] Documentation structure
 
-## Phase 2: Runtime Kernel
+## Phase 2: Runtime Core ✓
 
-- [ ] Event Bus implementation
+- [x] Event Bus implementation
+- [x] Capability Registry
+- [x] State Manager with lifecycle tracking
+- [x] Governance Gate (allow/deny)
+- [x] Capability Executor (validate → governance → execute)
+- [x] AURARuntime orchestrator
+- [x] 3 capability providers (echo, system_info, sleep)
+- [x] 153 tests (unit, integration, E2E)
+- [x] Performance benchmarks
+- [x] Research experiments
+
+**Version:** v0.1.0 — Complete
+
+## Phase 3: Runtime Kernel
+
 - [ ] Session Manager
 - [ ] Context Engine
 - [ ] Agent Scheduler
 - [ ] Resource Manager
-- [ ] Governance Engine
+- [ ] Extended Governance Engine
 
 **Target:** v0.2.0
 
-## Phase 3: Cognitive Services
+## Phase 4: Cognitive Services
 
 - [ ] Reasoning System
 - [ ] Memory System (Episodic, Semantic, Procedural)
@@ -28,7 +42,7 @@
 
 **Target:** v0.3.0
 
-## Phase 4: Planning & Orchestration
+## Phase 5: Planning & Orchestration
 
 - [ ] Adaptive planning engine
 - [ ] Task decomposition
@@ -37,7 +51,7 @@
 
 **Target:** v0.4.0
 
-## Phase 5: Desktop Automation
+## Phase 6: Desktop Automation
 
 - [ ] Desktop Agent
 - [ ] Browser Agent
@@ -46,7 +60,7 @@
 
 **Target:** v0.5.0
 
-## Phase 6: Mobile Automation
+## Phase 7: Mobile Automation
 
 - [ ] Android Agent
 - [ ] Cross-device synchronization
@@ -54,7 +68,7 @@
 
 **Target:** v0.6.0
 
-## Phase 7: Integration & Polish
+## Phase 8: Integration & Polish
 
 - [ ] Voice Interface
 - [ ] Vision Interface
@@ -69,9 +83,9 @@
 ## Milestones
 
 | Version | Milestone | Status |
-|---|---|---|
-| v0.1.0 | Documentation complete | ✅ Current |
-| v0.2.0 | Runtime kernel prototype | 🔄 Planned |
+|---------|-----------|--------|
+| v0.1.0 | Runtime Core | ✅ Complete |
+| v0.2.0 | Runtime Kernel | 🔄 Planned |
 | v0.3.0 | Memory + Reasoning | ⏳ Pending |
 | v0.4.0 | Planning | ⏳ Pending |
 | v0.5.0 | Desktop automation | ⏳ Pending |
