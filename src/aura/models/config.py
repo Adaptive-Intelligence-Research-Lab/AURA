@@ -33,11 +33,18 @@ class GovernanceConfig:
 
 
 @dataclass
+class ExecutionConfig:
+    default_timeout_ms: int = 30000
+    max_retry_count: int = 3
+
+
+@dataclass
 class AuraConfig:
     runtime: RuntimeConfig = field(default_factory=RuntimeConfig)
     event_bus: EventBusConfig = field(default_factory=EventBusConfig)
     observability: ObservabilityConfig = field(default_factory=ObservabilityConfig)
     governance: GovernanceConfig = field(default_factory=GovernanceConfig)
+    execution: ExecutionConfig = field(default_factory=ExecutionConfig)
 
     @classmethod
     def from_dict(cls, data: dict) -> AuraConfig:

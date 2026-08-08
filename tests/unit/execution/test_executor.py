@@ -2,6 +2,7 @@
 
 import pytest
 
+from aura.execution.executor import CapabilityExecutor
 from aura.models.actions import Action
 from aura.models.capabilities import (
     CapabilityMetadata,
@@ -10,7 +11,6 @@ from aura.models.capabilities import (
 )
 from aura.models.events import Event, EventType
 from aura.runtime.event_bus.bus import EventBus
-from aura.runtime.executor.executor import CapabilityExecutor
 from aura.runtime.governance.gate import GovernanceGate
 
 
@@ -81,8 +81,8 @@ class TestCapabilityExecutor:
         assert result.success is True
         assert result.output == {"result": "Echo: hello"}
         assert result.error is None
-        assert result.duration_ms is not None
         assert result.capability_id == "test.mock"
+        assert result.execution_id is not None
 
         await bus.stop()
 
@@ -125,7 +125,7 @@ class TestCapabilityExecutor:
 
     @pytest.mark.asyncio
     async def test_events_published(self):
-        """Executor publishes lifecycle events."""
+        """Executor publishes lifecycle events in correct order."""
         bus = EventBus()
         await bus.start()
         governance = GovernanceGate()
@@ -145,8 +145,62 @@ class TestCapabilityExecutor:
 
         await executor.execute(action, provider)
 
-        assert EventType.ACTION_VALIDATED in received_events
-        assert EventType.ACTION_STARTED in received_events
-        assert EventType.ACTION_COMPLETED in received_events
+        assert received_events == [
+            EventType.ACTION_VALIDATED,
+            EventType.ACTION_STARTED,
+            EventType.ACTION_COMPLETED,
+        ]
+
+        await bus.stop()
+
+    @pytest.mark.asyncio
+    async def test_governance_denial_publishes_failure_event(self):
+        """Governance denial produces ACTION_FAILED event."""
+        bus = EventBus()
+        await bus.start()
+        governance = GovernanceGate()
+        governance.deny_capability("test.mock")
+        executor = CapabilityExecutor(bus, governance)
+
+        received_events: list[Event] = []
+
+        async def capture(event: Event):
+            received_events.append(event)
+
+        bus.subscribe(EventType.ACTION_FAILED, capture)
+
+        provider = MockCapabilityProvider()
+        action = Action(capability_id="test.mock", parameters={"message": "hello"})
+
+        await executor.execute(action, provider)
+
+        assert len(received_events) == 1
+        assert "governance" in received_events[0].payload["error"].lower()
+
+        await bus.stop()
+
+    @pytest.mark.asyncio
+    async def test_correlation_id_propagates(self):
+        """All events share the action's correlation_id."""
+        bus = EventBus()
+        await bus.start()
+        governance = GovernanceGate()
+        executor = CapabilityExecutor(bus, governance)
+
+        received_correlations = []
+
+        async def capture(event: Event):
+            received_correlations.append(event.correlation_id)
+
+        for et in (EventType.ACTION_VALIDATED, EventType.ACTION_STARTED, EventType.ACTION_COMPLETED):
+            bus.subscribe(et, capture)
+
+        provider = MockCapabilityProvider()
+        action = Action(capability_id="test.mock", parameters={"message": "hello"})
+
+        await executor.execute(action, provider)
+
+        assert len(received_correlations) == 3
+        assert all(c == action.correlation_id for c in received_correlations)
 
         await bus.stop()

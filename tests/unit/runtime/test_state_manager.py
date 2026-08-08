@@ -25,15 +25,15 @@ class TestStateManager:
         ))
         assert sm.get_state(action_id) == ActionState.CREATED
 
-        # VALIDATED
+        # VALIDATED -> auto-transitions to QUEUED
         await sm.handle_event(Event(
             event_type=EventType.ACTION_VALIDATED,
             source="test",
             payload={"action_id": action_id}
         ))
-        assert sm.get_state(action_id) == ActionState.VALIDATED
+        assert sm.get_state(action_id) == ActionState.QUEUED
 
-        # RUNNING (from VALIDATED - v0.1 simplification)
+        # RUNNING
         await sm.handle_event(Event(
             event_type=EventType.ACTION_STARTED,
             source="test",
@@ -50,6 +50,40 @@ class TestStateManager:
         assert sm.get_state(action_id) == ActionState.COMPLETED
 
     @pytest.mark.asyncio
+    async def test_full_lifecycle_with_failure(self):
+        """Action lifecycle ending in failure."""
+        sm = StateManager()
+        action_id = str(uuid4())
+
+        await sm.handle_event(Event(
+            event_type=EventType.ACTION_CREATED,
+            source="test",
+            payload={"action_id": action_id}
+        ))
+        assert sm.get_state(action_id) == ActionState.CREATED
+
+        await sm.handle_event(Event(
+            event_type=EventType.ACTION_VALIDATED,
+            source="test",
+            payload={"action_id": action_id}
+        ))
+        assert sm.get_state(action_id) == ActionState.QUEUED
+
+        await sm.handle_event(Event(
+            event_type=EventType.ACTION_STARTED,
+            source="test",
+            payload={"action_id": action_id}
+        ))
+        assert sm.get_state(action_id) == ActionState.RUNNING
+
+        await sm.handle_event(Event(
+            event_type=EventType.ACTION_FAILED,
+            source="test",
+            payload={"action_id": action_id}
+        ))
+        assert sm.get_state(action_id) == ActionState.FAILED
+
+    @pytest.mark.asyncio
     async def test_invalid_transition_rejected(self):
         """Invalid transitions raise StateTransitionError."""
         sm = StateManager()
@@ -59,6 +93,25 @@ class TestStateManager:
         with pytest.raises(StateTransitionError):
             await sm.handle_event(Event(
                 event_type=EventType.ACTION_COMPLETED,
+                source="test",
+                payload={"action_id": action_id}
+            ))
+
+    @pytest.mark.asyncio
+    async def test_cannot_go_from_created_to_running(self):
+        """CREATED -> RUNNING is invalid (must go through VALIDATED/QUEUED)."""
+        sm = StateManager()
+        action_id = str(uuid4())
+
+        await sm.handle_event(Event(
+            event_type=EventType.ACTION_CREATED,
+            source="test",
+            payload={"action_id": action_id}
+        ))
+
+        with pytest.raises(StateTransitionError):
+            await sm.handle_event(Event(
+                event_type=EventType.ACTION_STARTED,
                 source="test",
                 payload={"action_id": action_id}
             ))
@@ -75,7 +128,6 @@ class TestStateManager:
             payload={"action_id": action_id}
         ))
 
-        # State should be retrievable
         assert sm.get_state(action_id) == ActionState.CREATED
 
     def test_set_initial_state(self):
@@ -118,3 +170,39 @@ class TestStateManager:
             payload={}
         ))
         assert sm.get_kernel_state() == KernelState.STOPPED
+
+    @pytest.mark.asyncio
+    async def test_failed_can_retry_to_created(self):
+        """FAILED -> CREATED is allowed for retries."""
+        sm = StateManager()
+        action_id = str(uuid4())
+
+        await sm.handle_event(Event(
+            event_type=EventType.ACTION_CREATED,
+            source="test",
+            payload={"action_id": action_id}
+        ))
+        await sm.handle_event(Event(
+            event_type=EventType.ACTION_VALIDATED,
+            source="test",
+            payload={"action_id": action_id}
+        ))
+        await sm.handle_event(Event(
+            event_type=EventType.ACTION_STARTED,
+            source="test",
+            payload={"action_id": action_id}
+        ))
+        await sm.handle_event(Event(
+            event_type=EventType.ACTION_FAILED,
+            source="test",
+            payload={"action_id": action_id}
+        ))
+        assert sm.get_state(action_id) == ActionState.FAILED
+
+        # Retry: FAILED -> CREATED
+        await sm.handle_event(Event(
+            event_type=EventType.ACTION_CREATED,
+            source="test",
+            payload={"action_id": action_id}
+        ))
+        assert sm.get_state(action_id) == ActionState.CREATED
