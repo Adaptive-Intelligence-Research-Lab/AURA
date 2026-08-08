@@ -31,6 +31,7 @@ class ExecutionResult:
     action_id: UUID
     status: ExecutionStatus
     execution_id: UUID = field(default_factory=uuid4)
+    capability_id: str = ""
     output: dict[str, Any] | None = None
     error: str | None = None
     started_at: datetime = field(

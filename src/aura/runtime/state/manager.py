@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 _VALID_ACTION_TRANSITIONS: dict[ActionState, set[ActionState]] = {
-    ActionState.CREATED: {ActionState.VALIDATED},
+    ActionState.CREATED: {ActionState.VALIDATED, ActionState.FAILED},
     ActionState.VALIDATED: {ActionState.QUEUED, ActionState.FAILED},
     ActionState.QUEUED: {ActionState.RUNNING, ActionState.FAILED, ActionState.CANCELLED},
     ActionState.RUNNING: {ActionState.COMPLETED, ActionState.FAILED},
@@ -74,7 +74,9 @@ class StateManager:
             return self._handle_action_created(action_id)
 
         elif event.event_type == EventType.ACTION_VALIDATED:
-            return self._transition_action(action_id, ActionState.VALIDATED)
+            self._transition_action(action_id, ActionState.VALIDATED)
+            # In v0.1, validation implies immediate queueing (no external queue)
+            return self._transition_action(action_id, ActionState.QUEUED)
 
         elif event.event_type == EventType.ACTION_STARTED:
             return self._transition_action(action_id, ActionState.RUNNING)
@@ -109,8 +111,8 @@ class StateManager:
         if not action_id:
             return ActionState.CREATED
 
-        if action_id not in self._action_states:
-            self._action_states[action_id] = ActionState.CREATED
+        # Always set to CREATED (supports retries from FAILED state)
+        self._action_states[action_id] = ActionState.CREATED
 
         return ActionState.CREATED
 
@@ -140,26 +142,6 @@ class StateManager:
 
         # Allow self-transitions
         if current == target:
-            return target
-
-        # Allow RUNNING transition from VALIDATED directly
-        # (v0.1 simplification: skip explicit QUEUED state)
-        if target == ActionState.RUNNING and current == ActionState.VALIDATED:
-            self._action_states[action_id] = ActionState.RUNNING
-            logger.debug(
-                f"Action {action_id} state: {current.value} -> {target.value}"
-            )
-            return target
-
-        # Allow RUNNING from QUEUED
-        if (
-            target == ActionState.RUNNING
-            and current == ActionState.QUEUED
-        ):
-            self._action_states[action_id] = ActionState.RUNNING
-            logger.debug(
-                f"Action {action_id} state: {current.value} -> {target.value}"
-            )
             return target
 
         valid_targets = _VALID_ACTION_TRANSITIONS.get(current, set())

@@ -5,7 +5,7 @@ All models are independent from execution implementations.
 """
 from .actions import Action, ActionPolicy
 from .capabilities import CapabilityMetadata, CapabilityProvider, RiskLevel
-from .config import AuraConfig
+from .config import AuraConfig, ExecutionConfig
 from .errors import ErrorCategory, ErrorSeverity
 from .errors import RuntimeError as AURARuntimeError
 from .events import Event, EventType
@@ -24,6 +24,7 @@ __all__ = [
     "ErrorSeverity",
     "Event",
     "EventType",
+    "ExecutionConfig",
     "ExecutionResult",
     "ExecutionStatus",
     "KernelState",
