@@ -1,6 +1,6 @@
 # AURA-IMPL-001 Implementation Results
 
-**Date:** 2026-08-08
+**Date:** 2026-08-10
 **Spec:** AURA-IMPL-001 (AURA Runtime Core v0.1)
 **Status:** Implementation Complete, Validation Complete
 
@@ -9,7 +9,7 @@
 ## Executive Summary
 
 AURA Runtime Core v0.1 has been implemented and validated against AURA-IMPL-001.
-All 153 tests pass. Linting (ruff) and type checking (mypy) are clean.
+All 154 tests pass. Linting (ruff) and type checking (mypy) are clean.
 Three research hypotheses are supported. Performance benchmarks collected.
 
 ---
@@ -58,7 +58,7 @@ Three research hypotheses are supported. Performance benchmarks collected.
 | Unit (adversarial) | 18 | all | 0 | PASS |
 | Integration | 6 | all | 0 | PASS |
 | E2E | 6 | all | 0 | PASS |
-| **Total** | **153** | **153** | **0** | **PASS** |
+| **Total** | **154** | **154** | **0** | **PASS** |
 
 ### Linting & Type Checking
 
@@ -116,9 +116,9 @@ matched expectations with no cross-contamination.
 
 | Events | Throughput (eps) | Duration (s) |
 |--------|-----------------|--------------|
-| 1,000 | 263,713 | 0.004 |
-| 10,000 | 268,009 | 0.037 |
-| 100,000 | 265,211 | 0.377 |
+| 1,000 | 264,845 | 0.004 |
+| 10,000 | 267,098 | 0.037 |
+| 100,000 | 265,618 | 0.377 |
 
 ### Event Latency (10,000 events)
 
@@ -126,22 +126,22 @@ matched expectations with no cross-contamination.
 |------------|-------------|
 | p50 | 4.4 |
 | p95 | 4.6 |
-| p99 | 4.9 |
+| p99 | 4.7 |
 
 ### Subscriber Scaling
 
 | Subscribers | Throughput (eps) |
 |-------------|-----------------|
-| 1 | 267,444 |
-| 10 | 204,015 |
-| 100 | 62,403 |
+| 1 | 267,516 |
+| 10 | 171,931 |
+| 100 | 62,012 |
 
 ### Kernel Lifecycle (10 iterations)
 
 | Phase | p50 (ms) | min (ms) | max (ms) |
 |-------|----------|----------|----------|
-| Startup | 0.04 | 0.02 | 0.09 |
-| Shutdown | 0.01 | 0.01 | 0.02 |
+| Startup | 0.02 | 0.02 | 0.06 |
+| Shutdown | 0.01 | 0.01 | 0.01 |
 
 ### Action Execution (1,000 actions)
 
@@ -149,7 +149,7 @@ matched expectations with no cross-contamination.
 |--------|-----------|
 | p50 | 0.02 |
 | p95 | 0.03 |
-| p99 | 0.05 |
+| p99 | 0.03 |
 | min | 0.02 |
 | max | 0.06 |
 
@@ -204,6 +204,6 @@ Implemented transitions match spec.
 
 ## Git History
 
-- Branch: `feat/aura-v0.1-spec-alignment`
-- Merged to: `develop` (16ca673)
+- Branch: `develop`
+- HEAD: `eac391e`
 - Pushed to: `origin/develop`
