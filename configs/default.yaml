@@ -1,0 +1,13 @@
+runtime:
+  name: aura
+  version: "0.1.0"
+
+event_bus:
+  queue_size: 1000
+
+observability:
+  logging: true
+  metrics: true
+
+governance:
+  default_policy: allow

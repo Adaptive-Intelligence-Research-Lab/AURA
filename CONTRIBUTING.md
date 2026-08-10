@@ -2,177 +2,171 @@
 
 ## Branching Strategy
 
-AURA uses a branching model inspired by **GitHub Flow + Trunk-Based Development + Research Branches**.
+AURA uses a **two-branch integration model**: `develop` is the active integration branch, `main` is the stable documentation branch.
 
-### Branch Categories
+### Branch Roles
 
-| Branch Type | Lifetime | Merge Required | Purpose |
-|---|---|---|---|
-| `main` | Permanent | N/A | Stable, releasable state |
-| `feature/*` | Short | Yes | New implementation |
-| `docs/*` | Short | Yes | Documentation updates |
-| `research/*` | Variable | Optional | Research and exploration |
-| `experiment/*` | Short–Medium | Optional | Proofs of concept |
-| `prototype/*` | Medium | Usually | Larger integrated prototypes |
-| `refactor/*` | Short | Yes | Internal improvements |
-| `bugfix/*` | Short | Yes | Standard bug fixes |
-| `hotfix/*` | Very Short | Yes | Critical production fixes |
-| `release/*` | Short | Yes | Final release preparation |
+| Branch | Purpose | Merges From | Lifetime |
+|--------|---------|-------------|----------|
+| `main` | Stable documentation and specifications | `docs/*` branches | Permanent |
+| `develop` | Active integration branch | `feat/*`, `fix/*`, `refactor/*` | Permanent |
+| `feat/*` | New implementation | — | Short, merged into `develop` |
+| `docs/*` | Documentation updates | — | Short, merged into `main` |
+| `fix/*` | Bug fixes | — | Short, merged into `develop` |
+| `refactor/*` | Internal improvements | — | Short, merged into `develop` |
+| `research/*` | Research and exploration | — | Variable, optional merge |
+| `experiment/*` | Proofs of concept | — | Short–medium, optional merge |
+
+### Branch Diagram
+
+```
+main ─────────●──────────────────●──────────────
+              │                  ↑
+              │            docs/runtime-core
+              │
+develop ──●───●───●───●───●───●───●───●────────
+          │       ↑   │       ↑       ↑
+          │       │   │       │       │
+     feat/event-bus  feat/state-mgr  feat/aura-v0.1
+```
 
 ### Branch Naming Conventions
 
 ```
-docs/reference-architecture
-docs/runtime-kernel
-docs/memory-system
-docs/planning-system
-
+feat/event-bus
+feat/capability-registry
+feat/state-manager
+feat/aura-v0.1-spec-alignment
+docs/runtime-core
+docs/spec-003
+fix/executor-governance
+refactor/kernel-lifecycle
 research/adaptive-memory
-research/cognitive-routing
-research/runtime-learning
-research/meta-reasoning
+experiment/context-graph
+```
 
-experiment/qwen-routing
-experiment/graph-memory
-experiment/hybrid-planning
-experiment/local-rag
+### Pull Request Workflow
 
-feature/voice-engine
-feature/android-controller
-feature/desktop-controller
-feature/plugin-sdk
-feature/browser-agent
+**Feature branches → `develop`:**
 
-refactor/context-cache
-refactor/runtime-api
-refactor/event-fabric
+```
+Issue / Task
+    │
+    ▼
+Create feat/branch from develop
+    │
+    ▼
+Develop + test locally
+    │
+    ▼
+Push to origin
+    │
+    ▼
+Open Pull Request → develop
+    │
+    ▼
+CI passes (pytest, ruff, mypy)
+    │
+    ▼
+Merge (squash or merge commit)
+```
 
-bugfix/scheduler-timeout
-hotfix/memory-leak
-release/v0.2.0
+**Documentation branches → `main`:**
+
+```
+docs/branch from main
+    │
+    ▼
+Write documentation
+    │
+    ▼
+Open Pull Request → main
+    │
+    ▼
+Merge
 ```
 
 ### Commit Message Format
 
-Follow [Conventional Commits](https://www.conventionalcommits.org/) from day one:
+Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
 <type>(<scope>): <description>
 
 feat(runtime): add event dispatcher
 feat(memory): implement episodic memory interface
-docs(architecture): complete planning system
-research(reflection): define evaluation framework
-experiment(graph): prototype context graph
+docs(spec): update AURA-SPEC-003
+fix(executor): resolve governance bypass
+test(models): add action model tests
 refactor(kernel): simplify lifecycle management
-fix(scheduler): resolve deadlock issue
-test(runtime): add event bus integration tests
-chore(repo): update gitignore
+chore(ci): add GitHub Actions workflow
 ```
 
-**Types:** `feat`, `docs`, `research`, `experiment`, `refactor`, `fix`, `test`, `chore`, `perf`, `ci`, `build`
+**Types:** `feat`, `docs`, `fix`, `test`, `refactor`, `chore`, `perf`, `ci`, `build`, `research`, `experiment`
 
-### Phase 1 — Documentation & Architecture (Current)
+### Scopes
 
-```
-main
-│
-├── docs/reference-architecture
-├── docs/runtime
-├── docs/cognition
-├── docs/specifications
-└── research/adaptive-control-plane
-```
+Common scopes for this project:
 
-Every branch merges into `main` after review. No permanent develop branch.
-
-### Phase 2 — Implementation
-
-```
-main
-│
-├── feature/runtime-kernel
-├── feature/event-bus
-├── feature/session-manager
-├── feature/context-engine
-├── feature/reasoning-system
-├── feature/memory-system
-├── feature/planning-system
-├── feature/android-agent
-└── feature/desktop-agent
-```
-
-Each feature is isolated and merged through a Pull Request.
-
-### Pull Request Workflow
-
-```
-Issue
-  │
-  ▼
-Create Branch
-  │
-  ▼
-Develop
-  │
-  ▼
-Self Review
-  │
-  ▼
-Open Pull Request
-  │
-  ▼
-Architecture Review
-  │
-  ▼
-Merge to main
-```
-
-Even as a solo contributor, use Pull Requests. They create a searchable review history.
+- `runtime` — Runtime kernel, event bus, state manager
+- `execution` — Executor and capability providers
+- `models` — Data models (actions, events, state, config)
+- `governance` — Governance gate
+- `observability` — Metrics, tracing, logger
+- `spec` — Specification documents
+- `ci` — CI/CD configuration
 
 ### Branch Protection Rules (GitHub)
 
-Configure on `main`:
+**On `develop`:**
+
+- Require Pull Requests
+- Require passing CI checks (pytest, ruff, mypy)
+- Allow self-approval (solo contributor)
+
+**On `main`:**
 
 - Prevent direct pushes
 - Require Pull Requests
-- Require passing CI checks
-- Require at least one approval (self-approve when solo)
-- Keep a linear commit history
 
 ### Release Strategy
 
-Tag stable milestones:
+Merge `develop` into `main` and tag stable milestones:
 
 ```
-v0.1.0   Documentation complete
-v0.2.0   Runtime kernel prototype
-v0.3.0   Memory + reasoning
+v0.1.0   Runtime Core (Event Bus, State Manager, Governance, Executor)
+v0.2.0   Runtime Kernel (Session, Context, Scheduler, Resources)
+v0.3.0   Memory + Reasoning
 v0.4.0   Planning
-v0.5.0   Desktop automation
-v0.6.0   Android automation
-v1.0.0   First complete offline agent
+v0.5.0   Desktop Automation
+v0.6.0   Android Automation
+v1.0.0   First Complete Offline Agent
 ```
 
-### Branch Lifecycle
+### Development Setup
 
-```
-main
- │
- ├── feature/runtime-kernel
- │          │
- │          └──────────────┐
- │                         ▼
- │                      Pull Request
- │                         │
- │                         ▼
- ├────────────────────────►main
- │
- ├── research/adaptive-memory
- │
- ├── experiment/context-graph
- │
- └── docs/reference-architecture
+```bash
+# Clone
+git clone https://github.com/Adaptive-Intelligence-Research-Lab/AURA.git
+cd AURA
+
+# Create virtual environment (Python 3.11+)
+python -m venv .venv311
+.venv311\Scripts\activate  # Windows
+
+# Install dependencies
+pip install -e ".[dev]"
+
+# Run tests
+pytest tests/ -v
+
+# Lint
+ruff check src/ tests/
+
+# Type check
+mypy src/aura/ --ignore-missing-imports
 ```
 
-Research and experiment branches can remain open for months or be archived if the ideas don't pan out.
+---
+
+**Adaptive Intelligence Research Lab**
