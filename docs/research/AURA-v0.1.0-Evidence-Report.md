@@ -18,8 +18,8 @@
 | mypy | 2.3.0 |
 | pytest-asyncio | 1.4.0 |
 | Branch | `develop` |
-| HEAD SHA | `ca95b74` |
-| Commit message | `docs: add AURA v0.1.0 evidence report` |
+| HEAD SHA | `258b0b0` |
+| Commit message | `docs: add AURA v0.1.0 release review` |
 | Working tree | Clean |
 | Remote sync | Up to date with `origin/develop` |
 
@@ -116,19 +116,19 @@ Success: no issues found in 30 source files
 AURA v0.1 Event Bus Performance Benchmark
 ============================================================
 Benchmarking event throughput...
-  1000 events: 264845.0 eps
-  10000 events: 267098.0 eps
-  100000 events: 265618.0 eps
+  1000 events: 262564.0 eps
+  10000 events: 263136.0 eps
+  100000 events: 261949.0 eps
 Benchmarking event latency...
   p50=4.4us p99=4.7us
 Benchmarking subscriber scaling...
-  1 subscribers: 267516.0 eps
-  10 subscribers: 171931.0 eps
-  100 subscribers: 62012.0 eps
+  1 subscribers: 263664.0 eps
+  10 subscribers: 200678.0 eps
+  100 subscribers: 61284.0 eps
 Benchmarking kernel lifecycle...
   startup p50=0.02ms
 Benchmarking action execution...
-  p50=0.02ms p99=0.03ms
+  p50=0.02ms p99=0.05ms
 ============================================================
 ```
 
@@ -136,19 +136,19 @@ Benchmarking action execution...
 
 | Metric | Value |
 |--------|-------|
-| Event throughput (1k events) | 264,845 eps |
-| Event throughput (10k events) | 267,098 eps |
-| Event throughput (100k events) | 265,618 eps |
+| Event throughput (1k events) | 262,564 eps |
+| Event throughput (10k events) | 263,136 eps |
+| Event throughput (100k events) | 261,949 eps |
 | Event latency p50 | 4.4 μs |
 | Event latency p95 | 4.6 μs |
 | Event latency p99 | 4.7 μs |
-| Subscriber scaling (1) | 267,516 eps |
-| Subscriber scaling (10) | 171,931 eps |
-| Subscriber scaling (100) | 62,012 eps |
+| Subscriber scaling (1) | 263,664 eps |
+| Subscriber scaling (10) | 200,678 eps |
+| Subscriber scaling (100) | 61,284 eps |
 | Kernel startup p50 | 0.02 ms |
 | Kernel shutdown p50 | 0.01 ms |
 | Action execution p50 | 0.02 ms |
-| Action execution p99 | 0.03 ms |
+| Action execution p99 | 0.05 ms |
 
 **Deviations from AURA-IMPL-001:** None
 
@@ -315,7 +315,7 @@ RESULT: SUPPORTED — Hypothesis confirmed
 
 **AURA v0.1.0 Runtime Core is ready for release.**
 
-All evidence collected at commit `ca95b74` on branch `develop`.
+All evidence collected at commit `258b0b0` on branch `develop`.
 
 ---
 

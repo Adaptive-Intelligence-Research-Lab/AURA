@@ -51,7 +51,7 @@ The Runtime Core provides an event-driven capability execution framework:
 
 ### Validation
 
-- **153 tests** — all passing (unit, integration, E2E)
+- **154 tests** — all passing (unit, integration, E2E)
 - **ruff** — all checks passed
 - **mypy** — 0 errors (30 source files)
 - **3 experiments** — capability independence, event reconstruction, failure isolation (all SUPPORTED)

@@ -16,7 +16,7 @@
 - [x] Capability Executor (validate → governance → execute)
 - [x] AURARuntime orchestrator
 - [x] 3 capability providers (echo, system_info, sleep)
-- [x] 153 tests (unit, integration, E2E)
+- [x] 154 tests (unit, integration, E2E)
 - [x] Performance benchmarks
 - [x] Research experiments
 

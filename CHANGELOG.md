@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **3 Capability Providers** — `core.echo`, `core.system_info`, `core.sleep`
 - **7 Data Models** — actions, events, capabilities, execution, state, config, errors
 - **Observability Stubs** — MetricsCollector, TraceContext, Logger
-- **153 Tests** — Unit (models, runtime, execution, observability, adversarial), integration, E2E
+- **154 Tests** — Unit (models, runtime, execution, observability, adversarial), integration, E2E
 - **Performance Benchmarks** — 265k events/sec, 4.4μs p50 latency, 0.02ms action execution
 - **Research Experiments** — Capability independence, event reconstruction, failure isolation (all SUPPORTED)
 - **GitHub Actions CI** — Lint (ruff), type check (mypy), test (pytest) on push/PR

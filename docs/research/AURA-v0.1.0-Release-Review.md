@@ -7,7 +7,7 @@
 **Review Status:** APPROVED FOR RELEASE
 **Review Date:** 2026-08-10
 **Baseline Branch:** `develop`
-**Validated Commit:** `eac391e`
+**Validated Commit:** `258b0b0`
 
 ---
 
@@ -125,7 +125,7 @@ The release review is based on the frozen `develop` branch and the validated imp
 **Validated commit:**
 
 ```text
-eac391e
+258b0b0
 ```
 
 The implementation evidence was reconciled against this validation baseline.
