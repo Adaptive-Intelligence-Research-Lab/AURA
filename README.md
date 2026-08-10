@@ -63,33 +63,52 @@ The Runtime Core provides an event-driven capability execution framework:
 
 ```
 AURA/
-├── src/aura/                  # Source code
-│   ├── models/                #   Data models (actions, events, state, config, errors)
-│   ├── runtime/               #   Runtime kernel, event bus, state manager, governance
-│   │   ├── event_bus/         #     Async event bus
-│   │   ├── governance/        #     Governance gate
-│   │   ├── registry/          #     Capability registry
-│   │   └── state/             #     State manager
-│   ├── execution/             #   Executor and capability providers
-│   │   └── providers/         #     echo, system_info, sleep
-│   └── observability/         #   Metrics, tracing, logger (stubs)
-├── tests/                     # Test suite
-│   ├── unit/                  #   Unit tests (models, runtime, execution, observability)
-│   ├── integration/           #   Integration tests
-│   └── e2e/                   #   End-to-end tests
-├── benchmarks/                # Performance benchmarks
-├── research/experiments/      # Research hypothesis experiments
-├── docs/                      # Documentation
-│   ├── architecture/          #   System architecture
-│   ├── specifications/        #   Spec documents (AURA-SPEC-001 through 010)
-│   ├── implementation/        #   Implementation results and compliance
-│   └── adr/                   #   Architecture Decision Records
-├── examples/                  # Example scripts
-├── adr/                       # ADR index
-├── pyproject.toml             # Project configuration
-├── CONTRIBUTING.md            # Contributing guidelines
-├── ROADMAP.md                 # Project milestones
-└── CHANGELOG.md               # Release history
+├── src/aura/                          # Runtime Core implementation (v0.1.0)
+│   ├── models/                        #   Data models
+│   │   ├── actions.py                 #     Action model
+│   │   ├── events.py                  #     Event model
+│   │   ├── capabilities.py            #     Capability model
+│   │   ├── execution.py               #     ExecutionResult model
+│   │   ├── state.py                   #     State enums
+│   │   ├── config.py                  #     Configuration model
+│   │   └── errors.py                  #     Error types
+│   ├── runtime/                       #   Runtime components
+│   │   ├── kernel.py                  #     AURARuntime orchestrator
+│   │   ├── event_bus/                 #     Async event bus
+│   │   ├── governance/                #     Governance gate
+│   │   ├── registry/                  #     Capability registry
+│   │   └── state/                     #     State manager
+│   ├── execution/                     #   Execution layer
+│   │   ├── executor.py                #     Capability executor
+│   │   └── providers/                 #     echo, system_info, sleep
+│   └── observability/                 #   Observability (stubs)
+│       ├── logger.py                  #     Logger wrapper
+│       ├── metrics.py                 #     MetricsCollector
+│       └── tracing.py                 #     TraceContext
+├── tests/                             # Test suite (154 tests)
+│   ├── unit/                          #   Unit tests (models, runtime, execution, observability, adversarial)
+│   ├── integration/                   #   Integration tests
+│   └── e2e/                           #   End-to-end tests
+├── benchmarks/                        # Performance benchmarks
+│   └── event_bus/                     #   Event Bus benchmark
+├── research/                          # Research artifacts
+│   ├── experiments/                   #   E-001, E-002, E-003
+│   └── docs/research/                 #   Release review, evidence, retrospective
+├── docs/                              # Documentation
+│   ├── architecture/                  #   System architecture
+│   ├── specifications/                #   Spec documents (AURA-SPEC-001 through 010)
+│   ├── implementation/                #   Implementation results and compliance
+│   └── research/                      #   Release artifacts
+│       ├── AURA-v0.1.0-Release-Review.md
+│       ├── AURA-v0.1.0-Evidence-Report.md
+│       └── AURA-v0.1.0-Architectural-Retrospective.md
+├── configs/                           # Configuration files
+│   └── default.yaml                   #   Default configuration
+├── examples/                          # Example scripts
+├── pyproject.toml                     # Project configuration
+├── CONTRIBUTING.md                    # Contributing guidelines
+├── ROADMAP.md                         # Project milestones
+└── CHANGELOG.md                       # Release history
 ```
 
 ---
@@ -118,6 +137,9 @@ For detailed architecture documentation, see [docs/architecture/](docs/architect
 | [Architecture](docs/architecture/) | System architecture specifications |
 | [Specifications](docs/specifications/) | AURA-SPEC-001 through 010 |
 | [Implementation](docs/implementation/) | v0.1.0 results and compliance review |
+| [Release Review](docs/research/AURA-v0.1.0-Release-Review.md) | v0.1.0 release review and approval |
+| [Evidence Report](docs/research/AURA-v0.1.0-Evidence-Report.md) | v0.1.0 validation evidence |
+| [Architectural Retrospective](docs/research/AURA-v0.1.0-Architectural-Retrospective.md) | v0.1.0 post-release analysis |
 | [Changelog](CHANGELOG.md) | Release history |
 | [Roadmap](ROADMAP.md) | Project milestones |
 
